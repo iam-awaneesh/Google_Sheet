@@ -1,82 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spread Sheet</title>
-    <link rel="stylesheet" href="./style.css">
-    <link rel="stylesheet" href="./option.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SheetFlow</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="./css/variables.css" />  <!-- CSS vars, reset, app shell -->
+  <link rel="stylesheet" href="./css/layout.css" />     <!-- toolbar, formula bar, status bar -->
+  <link rel="stylesheet" href="./css/grid.css" />       <!-- spreadsheet grid and cells -->
 </head>
 <body>
-    <h1 id="heading"> Enter Your Data </h1>
-    <div id="option">
-        <form class="form">
-            <select name="fontFamily" class="input">
-                <option value="poppins-regular">Regular</option>
-                <option value="poppins-extra-bold">Extra Bold</option>
-                <option value="poppins-medium">Medium</option>
-            </select>
-            <input class="input" type="number" name="fontSize" id="size" min="8" max="32" value="16">
-            <div>
-                <input type="checkbox" name="isBold" id="bold">
-                <label for="bold" class="material-icons">format_bold</label>
-            </div>
-            <div>
-                <input type="checkbox" name="isItalic" id="italic">
-                <label for="italic" class="material-icons">format_italic</label>
-            </div>
-            <div>
-                <input type="checkbox" name="isUnderline" id="underline">
-                <label for="underline" class="material-icons">format_underlined</label>
-            </div>
 
-            <div>
-                <input type="radio" name="align" id="left" value="left" checked>
-                <label for="left" class="material-icons">format_align_left</label>
-            </div>
-            <div>
-                <input type="radio" name="align" id="center" value="center">
-                <label for="center" class="material-icons">format_align_center</label>
-            </div>
-            <div>
-                <input type="radio" name="align" id="right" value="right">
-                <label for="right" class="material-icons">format_align_right</label>
-            </div>
+<div id="app">
 
-            <div>
-                <input type="color" name="textColor" id="text-color" value="black">
-                <label for="text-color" class="material-icons">format_color_text</label>
-            </div>
-            <div>
-                <input type="color" name="bgColor" id="bg-color" value="#ffffff">
-                <label for="bg-color" class="material-icons">format_color_fill</label>
-            </div>
-
-            <span onclick="exportData()" id="export" class="material-icons">cloud_upload</span>
-            
-        </form>
-
+  <!-- ── Top Bar ─────────────────────────────────────────────── -->
+  <div id="top-bar">
+    <div id="app-logo">
+      <div class="logo-icon">S</div>
+      <span class="logo-name">SheetFlow</span>
     </div>
 
-    <div id="formula-bar">
-        <div id="selected-cell">null</div>
-        <input type="text" name="formula-cell" id="formula-cell" placeholder="f ( x )">
+    <input id="file-name" type="text" value="Untitled Spreadsheet" spellcheck="false" />
+
+    <div class="spacer"></div>
+
+    <button class="top-action-btn" id="import-btn">
+      <span class="material-icons-round">file_upload</span> Import
+    </button>
+    <button class="top-action-btn primary" id="export-btn">
+      <span class="material-icons-round">cloud_download</span> Export
+    </button>
+
+    <!-- Hidden file input for import -->
+    <input type="file" id="import-file" accept=".json" style="display:none" />
+  </div>
+
+  <!-- ── Toolbar ─────────────────────────────────────────────── -->
+  <div id="toolbar">
+
+    <!-- Font family -->
+    <select id="font-family-select">
+      <option value="'DM Mono', monospace">DM Mono</option>
+      <option value="'DM Sans', sans-serif">DM Sans</option>
+      <option value="Georgia, serif">Georgia</option>
+      <option value="'Courier New', monospace">Courier New</option>
+      <option value="Arial, sans-serif">Arial</option>
+    </select>
+
+    <!-- Font size -->
+    <input id="font-size-input" type="number" min="8" max="72" value="12" />
+
+    <div class="toolbar-sep"></div>
+
+    <!-- Text style toggles -->
+    <button class="tb-btn" id="btn-bold"      title="Bold (Ctrl+B)">
+      <span class="material-icons-round">format_bold</span>
+    </button>
+    <button class="tb-btn" id="btn-italic"    title="Italic (Ctrl+I)">
+      <span class="material-icons-round">format_italic</span>
+    </button>
+    <button class="tb-btn" id="btn-underline" title="Underline (Ctrl+U)">
+      <span class="material-icons-round">format_underlined</span>
+    </button>
+    <button class="tb-btn" id="btn-strike"    title="Strikethrough">
+      <span class="material-icons-round">strikethrough_s</span>
+    </button>
+
+    <div class="toolbar-sep"></div>
+
+    <!-- Text color -->
+    <div class="color-picker-wrap" title="Text Color">
+      <input type="color" id="text-color-input" value="#e2e6f0" />
+      <div class="color-icon">
+        <span class="material-icons-round">format_color_text</span>
+        <div class="color-swatch" id="text-color-swatch" style="background:#e2e6f0"></div>
+      </div>
     </div>
-    <div id="root">
-        <div id="header-section">
-            <div class="fixed_cell srn-cell"></div>
-            <div id="header"></div>
-        </div>
-        <div id="table-body">
-            <div id="srn"></div>
-            <div id="body-cell">
-                <div class="row"></div>
-            </div>
-        </div>
-        <script src="./funtionality.js"></script>
-        <script src="./script.js"></script>
+
+    <!-- Background / fill color -->
+    <div class="color-picker-wrap" title="Fill Color">
+      <input type="color" id="bg-color-input" value="#0f1117" />
+      <div class="color-icon">
+        <span class="material-icons-round">format_color_fill</span>
+        <div class="color-swatch" id="bg-color-swatch" style="background:#0f1117"></div>
+      </div>
     </div>
+
+    <div class="toolbar-sep"></div>
+
+    <!-- Alignment -->
+    <div class="align-group">
+      <button class="tb-btn active" id="btn-align-left"   title="Align Left">
+        <span class="material-icons-round">format_align_left</span>
+      </button>
+      <button class="tb-btn"        id="btn-align-center" title="Align Center">
+        <span class="material-icons-round">format_align_center</span>
+      </button>
+      <button class="tb-btn"        id="btn-align-right"  title="Align Right">
+        <span class="material-icons-round">format_align_right</span>
+      </button>
+    </div>
+
+    <div class="toolbar-sep"></div>
+
+    <!-- Clear cell -->
+    <button class="tb-btn" id="btn-clear" title="Clear Cell">
+      <span class="material-icons-round">clear</span>
+    </button>
+
+  </div>
+
+  <!-- ── Formula Bar ─────────────────────────────────────────── -->
+  <div id="formula-bar">
+    <div id="cell-ref-box">A1</div>
+    <div id="formula-icon">fx</div>
+    <input id="formula-input" type="text" placeholder="Enter value or formula..." spellcheck="false" />
+  </div>
+
+  <!-- ── Spreadsheet Grid ────────────────────────────────────── -->
+  <div id="sheet-container">
+    <div id="grid-scroll">
+      <div id="grid-inner">
+        <div id="col-headers"></div>  <!-- column letters (A–Z) -->
+        <div id="grid-body"></div>    <!-- rows with cells -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Status Bar ──────────────────────────────────────────── -->
+  <div id="status-bar">
+    <div id="sheet-tab">
+      <span class="material-icons-round">table_chart</span>
+      Sheet1
+    </div>
+    <div class="status-spacer"></div>
+    <div class="status-info" id="status-cell">Cell: <span>—</span></div>
+    <div class="status-info" id="status-sum">Sum: <span>—</span></div>
+    <div class="status-info" id="status-count">Count: <span>—</span></div>
+  </div>
+
+</div><!-- /#app -->
+
+
+<!-- ── Context Menu (right-click) ──────────────────────────────── -->
+<div id="context-menu">
+  <div class="ctx-item" id="ctx-copy">
+    <span class="material-icons-round">content_copy</span> Copy
+  </div>
+  <div class="ctx-item" id="ctx-paste">
+    <span class="material-icons-round">content_paste</span> Paste
+  </div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item" id="ctx-clear-style">
+    <span class="material-icons-round">format_clear</span> Clear Formatting
+  </div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item danger" id="ctx-clear-cell">
+    <span class="material-icons-round">delete_outline</span> Clear Cell
+  </div>
+</div>
+
+<!-- ── Toast Notification ──────────────────────────────────────── -->
+<div id="toast"></div>
+
+
+<!-- ── JavaScript ──────────────────────────────────────────────── -->
+<!--
+  Load order matters:
+  1. config.js   — constants (COLS, ROWS, DEFAULT_STYLE)
+  2. state.js    — shared state (cellData, activeCell, clipboard)
+  3. grid.js     — DOM builder (colLetter, cellId, getCell, buildGrid)
+  4. style.js    — styling functions (applyStyleToCell, syncToolbarToCell …)
+  5. events.js   — cell event handlers (onCellFocus, onCellKeydown …)
+  6. toolbar.js  — toolbar event bindings (initToolbar, initContextMenu)
+  7. io.js       — import / export (initIO)
+-->
+<script src="./js/config.js"></script>
+<script src="./js/state.js"></script>
+<script src="./js/grid.js"></script>
+<script src="./js/style.js"></script>
+<script src="./js/events.js"></script>
+<script src="./js/toolbar.js"></script>
+<script src="./js/io.js"></script>
+
+<script>
+  // ── Boot ──────────────────────────────────────────────────────
+  // This tiny inline block just calls the init functions in order.
+  // All logic lives in the JS files above.
+  buildGrid();        // grid.js   — renders the spreadsheet DOM
+  initFormulaBar();   // events.js — wires formula bar input
+  initToolbar();      // toolbar.js — wires toolbar buttons
+  initContextMenu();  // toolbar.js — wires right-click menu
+  initIO();           // io.js     — wires import/export buttons
+</script>
+
 </body>
 </html>

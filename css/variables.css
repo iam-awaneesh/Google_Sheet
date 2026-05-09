@@ -1,0 +1,63 @@
+/* ── CSS Variables ───────────────────────────────────────────────
+   All design tokens live here. Change a color once, it updates
+   everywhere in the app.
+──────────────────────────────────────────────────────────────── */
+:root {
+  /* Colors */
+  --bg:           #0f1117;
+  --surface:      #181b24;
+  --surface2:     #1e2130;
+  --surface3:     #252a3a;
+  --border:       #2c3149;
+  --border-light: #353c58;
+  --accent:       #4f7cff;
+  --accent-soft:  #4f7cff33;
+  --accent2:      #38d9a9;
+  --text:         #e2e6f0;
+  --text-muted:   #7a84a3;
+  --text-dim:     #4a516e;
+  --danger:       #ff5c7a;
+
+  /* Typography */
+  --font-ui:   'DM Sans', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+
+  /* Sizing */
+  --radius:      6px;
+  --toolbar-h:   52px;
+  --formula-h:   40px;
+  --colhdr-h:    28px;
+  --cell-w:      120px;
+  --cell-h:      28px;
+  --row-num-w:   52px;
+}
+
+/* ── Reset ───────────────────────────────────────────────────────
+   Remove browser default margin/padding on every element.
+──────────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 13px;
+}
+
+/* ── App Shell ───────────────────────────────────────────────────
+   Outer flex container that stacks all rows top-to-bottom.
+──────────────────────────────────────────────────────────────── */
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}

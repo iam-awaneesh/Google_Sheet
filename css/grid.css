@@ -1,0 +1,178 @@
+/* ── grid.css ────────────────────────────────────────────────────
+   Styles for the spreadsheet grid only:
+   scroll container, column headers, row numbers, and cells.
+──────────────────────────────────────────────────────────────── */
+
+
+/* ════════════════════════════════
+   GRID SCROLL CONTAINER
+════════════════════════════════ */
+
+/* Outer wrapper — takes all remaining vertical space */
+#sheet-container {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The actual scrollable area */
+#grid-scroll {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+}
+
+/* Custom scrollbar — matches the dark theme */
+#grid-scroll::-webkit-scrollbar         { width: 10px; height: 10px; }
+#grid-scroll::-webkit-scrollbar-track   { background: var(--surface); }
+#grid-scroll::-webkit-scrollbar-thumb   { background: var(--border-light); border-radius: 5px; }
+#grid-scroll::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+#grid-scroll::-webkit-scrollbar-corner  { background: var(--surface); }
+
+/* Inner grid — grows to fit all rows/columns */
+#grid-inner {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+}
+
+
+/* ════════════════════════════════
+   COLUMN HEADERS  (A, B, C …)
+════════════════════════════════ */
+
+/* Row that holds the corner cell + all column letters */
+#col-headers {
+  display: flex;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+/* Empty top-left corner cell (sticky in both directions) */
+.col-header-corner {
+  width: var(--row-num-w);
+  min-width: var(--row-num-w);
+  height: var(--colhdr-h);
+  background: var(--surface2);
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  left: 0;
+  z-index: 40;
+}
+
+/* Individual column letter cell */
+.col-header {
+  min-width: var(--cell-w);
+  width: var(--cell-w);
+  height: var(--colhdr-h);
+  background: var(--surface2);
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  user-select: none;
+  transition: background 0.1s, color 0.1s;
+}
+
+/* Highlighted when a cell in this column is selected */
+.col-header.highlighted {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+
+/* ════════════════════════════════
+   ROW NUMBERS  (1, 2, 3 …)
+════════════════════════════════ */
+
+/* Grid body — stacks rows vertically */
+#grid-body { display: flex; flex-direction: column; }
+
+/* One full row (row-number + cells) */
+.grid-row { display: flex; }
+
+/* Individual row number cell (stays sticky on horizontal scroll) */
+.row-num {
+  min-width: var(--row-num-w);
+  width: var(--row-num-w);
+  height: var(--cell-h);
+  background: var(--surface2);
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  user-select: none;
+  position: sticky;
+  left: 0;
+  z-index: 20;
+  transition: background 0.1s, color 0.1s;
+}
+
+/* Highlighted when a cell in this row is selected */
+.row-num.highlighted {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+
+/* ════════════════════════════════
+   CELLS
+════════════════════════════════ */
+
+.cell {
+  min-width: var(--cell-w);
+  width: var(--cell-w);
+  height: var(--cell-h);
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 0 6px;
+  outline: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: var(--cell-h);
+  cursor: cell;
+  transition: background 0.1s;
+  caret-color: var(--accent);
+}
+
+/* Subtle highlight on hover */
+.cell:hover { background: var(--surface); }
+
+/* Blue ring when cell is selected (but not being edited) */
+.cell.selected {
+  background: var(--accent-soft) !important;
+  box-shadow: inset 0 0 0 2px var(--accent);
+  z-index: 5;
+  position: relative;
+  border-radius: 2px;
+}
+
+/* Editing state — content overflows, thicker border */
+.cell:focus,
+.cell.editing {
+  background: var(--surface) !important;
+  box-shadow: inset 0 0 0 2px var(--accent);
+  z-index: 10;
+  position: relative;
+  overflow: visible;
+  white-space: pre;
+}

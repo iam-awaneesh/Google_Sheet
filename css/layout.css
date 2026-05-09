@@ -1,0 +1,393 @@
+/* ── layout.css ──────────────────────────────────────────────────
+   Styles for every UI element EXCEPT the spreadsheet grid itself.
+   Covers: top bar, toolbar, formula bar, status bar, context menu,
+   toast notification.
+──────────────────────────────────────────────────────────────── */
+
+
+/* ════════════════════════════════
+   TOP BAR  (logo + file name + actions)
+════════════════════════════════ */
+#top-bar {
+  height: 48px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+/* Logo group */
+#app-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#app-logo .logo-icon {
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: -1px;
+  flex-shrink: 0;
+}
+
+#app-logo .logo-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.3px;
+}
+
+/* Editable file name */
+#file-name {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  padding: 4px 8px;
+  border-radius: var(--radius);
+  outline: none;
+  min-width: 160px;
+  transition: border-color 0.2s, color 0.2s;
+}
+#file-name:focus {
+  border-color: var(--border-light);
+  color: var(--text);
+  background: var(--surface2);
+}
+
+/* Spacer pushes action buttons to the right */
+#top-bar .spacer { flex: 1; }
+
+/* Action buttons (Import / Export) */
+.top-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  border-radius: var(--radius);
+  padding: 6px 12px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.top-action-btn:hover {
+  background: var(--surface3);
+  color: var(--text);
+  border-color: var(--border-light);
+}
+.top-action-btn .material-icons-round { font-size: 15px; }
+
+.top-action-btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.top-action-btn.primary:hover { opacity: 0.88; }
+
+
+/* ════════════════════════════════
+   TOOLBAR  (formatting controls)
+════════════════════════════════ */
+#toolbar {
+  height: var(--toolbar-h);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 4px;
+  flex-shrink: 0;
+  overflow-x: auto;
+}
+
+/* Vertical divider between toolbar groups */
+.toolbar-sep {
+  width: 1px;
+  height: 24px;
+  background: var(--border);
+  margin: 0 6px;
+  flex-shrink: 0;
+}
+
+/* Font family dropdown */
+#font-family-select {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  padding: 5px 8px;
+  border-radius: var(--radius);
+  outline: none;
+  cursor: pointer;
+  min-width: 110px;
+}
+#font-family-select:focus { border-color: var(--accent); }
+
+/* Font size number input */
+#font-size-input {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 5px 6px;
+  border-radius: var(--radius);
+  outline: none;
+  width: 48px;
+  text-align: center;
+  -moz-appearance: textfield;
+}
+#font-size-input::-webkit-inner-spin-button,
+#font-size-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+#font-size-input:focus { border-color: var(--accent); }
+
+/* Generic icon toggle button (Bold, Italic, Align, etc.) */
+.tb-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.12s;
+  flex-shrink: 0;
+}
+.tb-btn .material-icons-round { font-size: 18px; }
+.tb-btn:hover {
+  background: var(--surface3);
+  color: var(--text);
+  border-color: var(--border);
+}
+.tb-btn.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* Color picker wrapper (hides the ugly native input, shows icon + swatch) */
+.color-picker-wrap {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.color-picker-wrap input[type="color"] {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+.color-picker-wrap .color-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  pointer-events: none;
+  transition: all 0.12s;
+}
+.color-picker-wrap:hover .color-icon {
+  background: var(--surface3);
+  border-color: var(--border);
+}
+.color-picker-wrap .color-icon .material-icons-round {
+  font-size: 16px;
+  color: var(--text-muted);
+}
+/* Colored strip below icon that shows currently selected color */
+.color-picker-wrap .color-swatch {
+  width: 16px;
+  height: 3px;
+  border-radius: 2px;
+  transition: background 0.1s;
+}
+
+/* Alignment buttons sit side-by-side with no gap */
+.align-group { display: flex; gap: 1px; }
+
+
+/* ════════════════════════════════
+   FORMULA BAR
+════════════════════════════════ */
+#formula-bar {
+  height: var(--formula-h);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+/* Shows the active cell reference, e.g. "A1" */
+#cell-ref-box {
+  width: var(--row-num-w);
+  min-width: var(--row-num-w);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--accent);
+  border-right: 1px solid var(--border);
+  background: var(--surface2);
+  font-weight: 500;
+}
+
+/* "fx" label */
+#formula-icon {
+  padding: 0 10px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--accent);
+  font-style: italic;
+  border-right: 1px solid var(--border);
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* Text input for the cell's value */
+#formula-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 0 12px;
+  height: 100%;
+}
+
+
+/* ════════════════════════════════
+   STATUS BAR  (bottom of screen)
+════════════════════════════════ */
+#status-bar {
+  height: 28px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+/* Sheet tab (just Sheet1 for now) */
+#sheet-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 11px;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+#sheet-tab .material-icons-round { font-size: 13px; }
+
+/* Numeric stats: Sum, Count */
+.status-info {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+.status-info span { color: var(--text-muted); }
+
+.status-spacer { flex: 1; }
+
+
+/* ════════════════════════════════
+   CONTEXT MENU  (right-click)
+════════════════════════════════ */
+#context-menu {
+  position: fixed;
+  background: var(--surface2);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  padding: 4px 0;
+  z-index: 9000;
+  min-width: 180px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  display: none;
+}
+
+.ctx-item {
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text);
+  transition: background 0.1s;
+}
+.ctx-item:hover { background: var(--surface3); }
+.ctx-item .material-icons-round { font-size: 15px; color: var(--text-muted); }
+
+.ctx-sep {
+  height: 1px;
+  background: var(--border);
+  margin: 4px 0;
+}
+
+/* Danger variant (e.g. Clear Cell) */
+.ctx-item.danger { color: var(--danger); }
+.ctx-item.danger .material-icons-round { color: var(--danger); }
+
+
+/* ════════════════════════════════
+   TOAST NOTIFICATION
+════════════════════════════════ */
+#toast {
+  position: fixed;
+  bottom: 48px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--surface3);
+  border: 1px solid var(--border-light);
+  color: var(--text);
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  font-size: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+  z-index: 9999;
+  white-space: nowrap;
+}
+#toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
